@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campaigns – Meta Ads Manager</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 14px;
+      color: #1c1e21;
+      background: #f0f2f5;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 60px;
+      min-width: 60px;
+      background: #f7f8fa;
+      border-right: 1px solid #e4e6eb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px 0;
+      flex-shrink: 0;
+    }
+    .sidebar-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 4px;
+      color: #65676b;
+      cursor: pointer;
+    }
+    .sidebar-icon svg { width: 24px; height: 24px; }
+    .sidebar-icon.active {
+      background: #1877f2;
+      color: #fff;
+      position: relative;
+    }
+    .sidebar-icon.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 24px;
+      background: #1877f2;
+      border-radius: 0 4px 4px 0;
+    }
+    .sidebar-icon:hover:not(.active) { background: #e4e6eb; }
+
+    /* Top bar */
+    .topbar {
+      height: 56px;
+      min-height: 56px;
+      background: #fff;
+      border-bottom: 1px solid #e4e6eb;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      flex-shrink: 0;
+    }
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .meta-logo {
+      width: 32px;
+      height: 32px;
+      color: #1877f2;
+    }
+    .page-title { font-size: 20px; font-weight: 600; color: #1c1e21; }
+    .account-selector {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      background: #f0f2f5;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .account-badge {
+      width: 24px;
+      height: 24px;
+      background: #f0c14b;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 12px;
+    }
+    .opportunity-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: #1877f2;
+      color: #fff;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .updated-text { font-size: 13px; color: #65676b; }
+    .refresh-btn {
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: transparent;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #65676b;
+    }
+    .refresh-btn:hover { background: #f0f2f5; }
+    .btn-primary {
+      padding: 8px 16px;
+      background: #1877f2;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-primary:hover { background: #166fe5; }
+    .more-dots {
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: transparent;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #65676b;
+    }
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #e4e6eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #65676b;
+    }
+
+    /* Main */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      overflow: hidden;
+    }
+    .content {
+      flex: 1;
+      overflow: auto;
+      padding: 16px 24px 24px;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 2px solid #e4e6eb;
+      margin-bottom: 16px;
+    }
+    .tab {
+      padding: 12px 20px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #65676b;
+      cursor: pointer;
+      border: none;
+      background: none;
+      position: relative;
+      margin-bottom: -2px;
+    }
+    .tab:hover { color: #1c1e21; }
+    .tab.active { color: #1877f2; font-weight: 600; }
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -2px;
+      height: 2px;
+      background: #1877f2;
+    }
+
+    /* Filter row */
+    .filter-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .filter-pills {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .filter-pill {
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: none;
+      background: #fff;
+      color: #1c1e21;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .filter-pill.active { background: #1877f2; color: #fff; }
+    .filter-pill:hover:not(.active) { background: #f0f2f5; }
+    .search-wrap {
+      flex: 1;
+      min-width: 280px;
+      position: relative;
+    }
+    .search-input {
+      width: 100%;
+      padding: 8px 12px 8px 36px;
+      border: 1px solid #e4e6eb;
+      border-radius: 8px;
+      font-size: 14px;
+      background: #fff;
+    }
+    .search-input:focus { outline: none; border-color: #1877f2; }
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      color: #65676b;
+    }
+    .date-range {
+      padding: 8px 12px;
+      border: 1px solid #e4e6eb;
+      border-radius: 8px;
+      background: #fff;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Action bar */
+    .action-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .action-left, .action-right { display: flex; align-items: center; gap: 8px; }
+    .btn-create {
+      padding: 8px 16px;
+      background: #42b72a;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-create:hover { background: #36a420; }
+    .btn-secondary {
+      padding: 8px 14px;
+      background: #f0f2f5;
+      color: #1c1e21;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-secondary:hover { background: #e4e6eb; }
+
+    /* Table */
+    .table-wrap {
+      background: #fff;
+      border-radius: 8px;
+      border: 1px solid #e4e6eb;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+    .table-scroll { overflow-x: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    thead {
+      background: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      box-shadow: 0 1px 0 #e4e6eb;
+    }
+    th {
+      text-align: left;
+      padding: 12px 16px;
+      font-weight: 600;
+      color: #65676b;
+      white-space: nowrap;
+    }
+    th .sort-icon { margin-left: 4px; opacity: 0.6; }
+    td {
+      padding: 12px 16px;
+      border-top: 1px solid #f0f2f5;
+      color: #1c1e21;
+    }
+    tbody tr:hover { background: #f7f8fa; }
+    .col-toggle { width: 56px; }
+    .col-campaign { min-width: 200px; }
+    .col-delivery { width: 100px; }
+    .col-actions { width: 80px; }
+    .col-bid { min-width: 140px; }
+    .col-budget { min-width: 120px; }
+    .col-attribution { min-width: 140px; }
+    .col-results { min-width: 100px; }
+    .col-reach { min-width: 80px; }
+
+    /* Toggle switch */
+    .toggle {
+      width: 44px;
+      height: 24px;
+      border-radius: 12px;
+      background: #ccd0d5;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.2s;
+    }
+    .toggle.on { background: #42b72a; }
+    .toggle-knob {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      transition: transform 0.2s;
+    }
+    .toggle.on .toggle-knob { transform: translateX(20px); }
+
+    .campaign-link {
+      color: #1877f2;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .campaign-link:hover { text-decoration: underline; }
+    .delivery-off {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #65676b;
+    }
+    .delivery-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ccd0d5;
+    }
+    .table-footer {
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #65676b;
+      border-top: 1px solid #e4e6eb;
+    }
+    .row-hidden { display: none; }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-icon" title="Meta">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+    </div>
+    <div class="sidebar-icon" title="Notifications">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+    </div>
+    <div class="sidebar-icon active" title="Campaigns">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
+    </div>
+    <div class="sidebar-icon" title="Files">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+    </div>
+    <div class="sidebar-icon" title="Audience">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+    </div>
+    <div class="sidebar-icon" title="Ads">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+    </div>
+    <div class="sidebar-icon" title="Billing">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
+    </div>
+    <div class="sidebar-icon" title="Settings">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <svg class="meta-logo" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+        <span class="page-title">Campaigns</span>
+        <div class="account-selector">
+          <span class="account-badge">H</span>
+          <span>AI Doers (401759566512...)</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+        </div>
+        <div class="opportunity-badge">
+          <span>100</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+          <span>Opportunity score</span>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <span class="updated-text">Updated just now</span>
+        <button class="refresh-btn" type="button" title="Refresh">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+        </button>
+        <button class="btn-primary" type="button">Review and publish</button>
+        <button class="more-dots" type="button">⋯</button>
+        <div class="avatar">f</div>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="tabs">
+        <button class="tab active" data-tab="campaigns">Campaigns</button>
+        <button class="tab" data-tab="adsets">Ad sets</button>
+        <button class="tab" data-tab="ads">Ads</button>
+      </div>
+
+      <div class="filter-row">
+        <div class="filter-pills">
+          <button class="filter-pill active">All ads</button>
+          <button class="filter-pill">Actions</button>
+          <button class="filter-pill">Had delivery</button>
+          <button class="filter-pill">Active ads</button>
+          <button class="filter-pill">See more</button>
+        </div>
+        <div class="search-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <input type="text" class="search-input" id="searchCampaigns" placeholder="Search to filter by: name, ID or metrics">
+        </div>
+        <div class="date-range">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM9 10H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/></svg>
+          Last 30 days
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+        </div>
+      </div>
+
+      <div class="action-bar">
+        <div class="action-left">
+          <button class="btn-create" type="button"><span>+</span> Create</button>
+          <button class="btn-secondary" type="button">Duplicate</button>
+          <button class="btn-secondary" type="button">Edit</button>
+          <button class="btn-secondary" type="button">Analyze</button>
+          <button class="btn-secondary" type="button">A/B test</button>
+          <button class="btn-secondary" type="button">More ▾</button>
+        </div>
+        <div class="action-right">
+          <button class="btn-secondary" type="button">Columns: Performance ▾</button>
+          <button class="btn-secondary" type="button">Breakdown ▾</button>
+          <button class="btn-secondary" type="button">Reports ▾</button>
+          <button class="btn-secondary" type="button">Export ▾</button>
+          <button class="btn-secondary" type="button">Charts</button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th class="col-toggle"><input type="checkbox" aria-label="Select all"> Off / On <span class="sort-icon">⇅</span></th>
+                <th class="col-campaign">Campaign <span class="sort-icon">⇅</span></th>
+                <th class="col-delivery">Delivery <span class="sort-icon">⇅</span></th>
+                <th class="col-actions">Actions</th>
+                <th class="col-bid">Bid strategy ▾</th>
+                <th class="col-budget">Budget <span class="sort-icon">⇅</span></th>
+                <th class="col-attribution">Attribution setting ▾</th>
+                <th class="col-results">Results <span class="sort-icon">⇅</span></th>
+                <th class="col-reach">Reach <span class="sort-icon">⇅</span></th>
+              </tr>
+            </thead>
+            <tbody id="campaignTableBody">
+              <tr data-campaign="Piraci Coffee - Campaign | MK">
+                <td class="col-toggle"><input type="checkbox" aria-label="Select row"><div class="toggle" role="switch" aria-checked="false" tabindex="0"><span class="toggle-knob"></span></div></td>
+                <td class="col-campaign"><a href="#" class="campaign-link">Piraci Coffee - Campaign | MK</a></td>
+                <td class="col-delivery"><span class="delivery-off"><span class="delivery-dot"></span> Off</span></td>
+                <td class="col-actions">—</td>
+                <td class="col-bid">Using ad set bid...</td>
+                <td class="col-budget">Using ad set bu...</td>
+                <td class="col-attribution">7-day click or...</td>
+                <td class="col-results">Landing Page View</td>
+                <td class="col-reach"></td>
+              </tr>
+              <tr data-campaign="CBO_E88 Pro_AIDoers_Sales_11_9_25">
+                <td class="col-toggle"><input type="checkbox" aria-label="Select row"><div class="toggle" role="switch" aria-checked="false" tabindex="0"><span class="toggle-knob"></span></div></td>
+                <td class="col-campaign"><a href="#" class="campaign-link">CBO_E88 Pro_AIDoers_Sales_11_9_25</a></td>
+                <td class="col-delivery"><span class="delivery-off"><span class="delivery-dot"></span> Off</span></td>
+                <td class="col-actions">—</td>
+                <td class="col-bid">Highest volume</td>
+                <td class="col-budget">$25.00 Daily</td>
+                <td class="col-attribution">7-day click, 1-...</td>
+                <td class="col-results">LEADS</td>
+                <td class="col-reach"></td>
+              </tr>
+              <tr data-campaign="CONV_ABO_AIDoers_11_06_25">
+                <td class="col-toggle"><input type="checkbox" aria-label="Select row"><div class="toggle" role="switch" aria-checked="false" tabindex="0"><span class="toggle-knob"></span></div></td>
+                <td class="col-campaign"><a href="#" class="campaign-link">CONV_ABO_AIDoers_11_06_25</a></td>
+                <td class="col-delivery"><span class="delivery-off"><span class="delivery-dot"></span> Off</span></td>
+                <td class="col-actions">—</td>
+                <td class="col-bid">Using ad set bid...</td>
+                <td class="col-budget">Using ad set bu...</td>
+                <td class="col-attribution">1-day click</td>
+                <td class="col-results">—</td>
+                <td class="col-reach">Reach</td>
+              </tr>
+              <tr data-campaign="AWARE_CBO_AIDoers_11_06_25">
+                <td class="col-toggle"><input type="checkbox" aria-label="Select row"><div class="toggle" role="switch" aria-checked="false" tabindex="0"><span class="toggle-knob"></span></div></td>
+                <td class="col-campaign"><a href="#" class="campaign-link">AWARE_CBO_AIDoers_11_06_25</a></td>
+                <td class="col-delivery"><span class="delivery-off"><span class="delivery-dot"></span> Off</span></td>
+                <td class="col-actions">—</td>
+                <td class="col-bid">Using ad set bid...</td>
+                <td class="col-budget">Using ad set bu...</td>
+                <td class="col-attribution">7-day click or...</td>
+                <td class="col-results">Landing Page View</td>
+                <td class="col-reach"></td>
+              </tr>
+              <tr data-campaign="LEAD_CBO_AIDoers_10_28_25">
+                <td class="col-toggle"><input type="checkbox" aria-label="Select row"><div class="toggle" role="switch" aria-checked="false" tabindex="0"><span class="toggle-knob"></span></div></td>
+                <td class="col-campaign"><a href="#" class="campaign-link">LEAD_CBO_AIDoers_10_28_25</a></td>
+                <td class="col-delivery"><span class="delivery-off"><span class="delivery-dot"></span> Off</span></td>
+                <td class="col-actions">—</td>
+                <td class="col-bid">Using ad set bid...</td>
+                <td class="col-budget">Using ad set bu...</td>
+                <td class="col-attribution">7-day click, 1-...</td>
+                <td class="col-results">LEADS</td>
+                <td class="col-reach"></td>
+              </tr>
+              <tr data-campaign="Retarget_ABO_AIDoers_10_15_25">
+                <td class="col-toggle"><input type="checkbox" aria-label="Select row"><div class="toggle" role="switch" aria-checked="false" tabindex="0"><span class="toggle-knob"></span></div></td>
+                <td class="col-campaign"><a href="#" class="campaign-link">Retarget_ABO_AIDoers_10_15_25</a></td>
+                <td class="col-delivery"><span class="delivery-off"><span class="delivery-dot"></span> Off</span></td>
+                <td class="col-actions">—</td>
+                <td class="col-bid">Using ad set bid...</td>
+                <td class="col-budget">Using ad set bu...</td>
+                <td class="col-attribution">1-day click</td>
+                <td class="col-results">—</td>
+                <td class="col-reach"></td>
+              </tr>
+              <tr data-campaign="TOF_CBO_Pro_10_01_25">
+                <td class="col-toggle"><input type="checkbox" aria-label="Select row"><div class="toggle" role="switch" aria-checked="false" tabindex="0"><span class="toggle-knob"></span></div></td>
+                <td class="col-campaign"><a href="#" class="campaign-link">TOF_CBO_Pro_10_01_25</a></td>
+                <td class="col-delivery"><span class="delivery-off"><span class="delivery-dot"></span> Off</span></td>
+                <td class="col-actions">—</td>
+                <td class="col-bid">Using ad set bid...</td>
+                <td class="col-budget">Using ad set bu...</td>
+                <td class="col-attribution">7-day click or...</td>
+                <td class="col-results">Landing Page View</td>
+                <td class="col-reach"></td>
+              </tr>
+              <tr data-campaign="Brand_ABO_AIDoers_09_20_25">
+                <td class="col-toggle"><input type="checkbox" aria-label="Select row"><div class="toggle" role="switch" aria-checked="false" tabindex="0"><span class="toggle-knob"></span></div></td>
+                <td class="col-campaign"><a href="#" class="campaign-link">Brand_ABO_AIDoers_09_20_25</a></td>
+                <td class="col-delivery"><span class="delivery-off"><span class="delivery-dot"></span> Off</span></td>
+                <td class="col-actions">—</td>
+                <td class="col-bid">Using ad set bid...</td>
+                <td class="col-budget">Using ad set bu...</td>
+                <td class="col-attribution">7-day click, 1-...</td>
+                <td class="col-results">Video views</td>
+                <td class="col-reach"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-footer">Results from 9 campaigns</div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    (function() {
+      // Tabs
+      document.querySelectorAll('.tab').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+          document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+          this.classList.add('active');
+        });
+      });
+
+      // Toggle switches
+      document.querySelectorAll('.toggle').forEach(function(toggle) {
+        toggle.addEventListener('click', function(e) { e.stopPropagation(); });
+        toggle.addEventListener('keydown', function(e) {
+          if (e.key === ' ' || e.key === 'Enter') {
+            e.preventDefault();
+            this.classList.toggle('on');
+            this.setAttribute('aria-checked', this.classList.contains('on'));
+          }
+        });
+        toggle.addEventListener('click', function() {
+          this.classList.toggle('on');
+          this.setAttribute('aria-checked', this.classList.contains('on'));
+        });
+      });
+
+      // Search filter
+      var searchInput = document.getElementById('searchCampaigns');
+      var rows = document.querySelectorAll('#campaignTableBody tr');
+      searchInput.addEventListener('input', function() {
+        var q = this.value.trim().toLowerCase();
+        var visible = 0;
+        rows.forEach(function(tr) {
+          var name = (tr.getAttribute('data-campaign') || '').toLowerCase();
+          var show = !q || name.indexOf(q) !== -1;
+          tr.classList.toggle('row-hidden', !show);
+          if (show) visible++;
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
