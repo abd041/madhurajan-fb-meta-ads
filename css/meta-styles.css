@@ -27,28 +27,40 @@ body {
   position: fixed;
   left: 0;
   top: 0;
-  width: 60px;
+  width: 56px;
   height: 100vh;
   background: #fff;
   border-right: 1px solid #E4E6EB;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 8px 0;
+  padding: 0 8px;
   overflow: hidden;
   transition: width 0.2s ease;
   z-index: 10000;
 
 }
-.sidebar:hover {
-  width: 240px;
+
+.sidebar-item-title{
+    margin-top: 10px;
+    padding-bottom: 24px;
 }
+
+.sidebar-item-notifications{
+  margin-bottom: 12px;
+  
+}
+
+.sidebar-divider-first{
+  margin-bottom: 14px;
+}
+/* .sidebar:hover {
+  width: 240px;
+} */
 .sidebar-item {
   width: 100%;
   display: flex;
   align-items: center;
-  padding: 0 10px;
-  margin-bottom: 6px;
   cursor: pointer;
   min-height: 40px;
   flex-shrink: 0;
@@ -66,10 +78,7 @@ body {
   color: #65676B;
   transition: background 0.15s ease, color 0.15s ease;
 }
-.sidebar-icon svg { 
-  width: 24px; 
-  height: 24px; 
-}
+
 /* Default: outline icons use stroke */
 .sidebar-icon:not(.active):not(:first-child):not(.sidebar-icon-gradient) svg[stroke="currentColor"] {
   fill: none;
@@ -375,10 +384,11 @@ body {
 }
 
 .opportunity-tooltip-message {
-  font-size: 14px;
+  font-size: 12px;
   line-height: 1.5;
-  color: #050505;
+  color: #1c2b33a6;
   margin: 0;
+  font-weight: 400;
 }
 
 .opportunity-tooltip-divider {
@@ -1503,4 +1513,26 @@ input[type="checkbox"] {
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+
+.x1xegmmw,
+.opportunity-score-circle{
+  position: relative;
+}
+
+.popup-heading-score,
+.opportunity-score-text{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+.opurtinuity-score-main-title{
+  color: #1c2b33;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
 }
