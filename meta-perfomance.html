@@ -981,15 +981,40 @@
         <section class="buying-type-section">
           <span class="buying-type-label">
             Choose a buying type
-            <span class="info-icon" title="Learn more about buying types" aria-hidden="true">i</span>
+             <div
+          class="xtwfq29"
+          style="
+            width: 12px;
+            height: 12px;
+            background-color: currentColor;
+        
+            -webkit-mask-image: url('../icons/modal.png');
+            -webkit-mask-position: 0px -2815px;
+            -webkit-mask-repeat: no-repeat;
+        
+            mask-image: url('../icons/modal.png');
+            mask-position: 0px -2815px;
+            mask-repeat: no-repeat;
+          "
+        ></div>
           </span>
           <div class="buying-type-dropdown" id="buyingTypeDropdown">
             <button type="button" class="buying-type-trigger" id="buyingTypeTrigger" aria-expanded="false" aria-haspopup="listbox" aria-label="Buying type">
               <span class="buying-type-trigger-text" id="buyingTypeTriggerText">Auction</span>
               <span class="buying-type-arrow" aria-hidden="true">
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                  <path d="M2.5 4.5L6 8l3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
+                  <div class="xtwfq29" style="
+            width: 16px;
+            height: 16px;
+            background-color: currentColor;
+        
+            -webkit-mask-image: url('../icons/top-header-icons.png');
+            -webkit-mask-position: 0px -1247px;
+            -webkit-mask-repeat: no-repeat;
+        
+            mask-image: url('../icons/top-header-icons.png');
+            mask-position: 0px -2522px;
+            mask-repeat: no-repeat;
+          "></div>
               </span>
             </button>
             <div class="buying-type-panel" id="buyingTypePanel" role="listbox" aria-hidden="true">
@@ -1013,53 +1038,14 @@
         <section class="objectives-section">
           <h2 class="objectives-heading" id="modalTitle">Choose a campaign objective</h2>
           <div class="objectives-layout">
-            <ul class="objectives-list" role="radiogroup" aria-label="Campaign objectives">
-              <li class="objective-item" data-objective="awareness">
-                <input type="radio" name="objective" id="obj-awareness" value="awareness" class="objective-radio">
-                <label for="obj-awareness" class="objective-label">
-                  <span class="objective-icon-wrap"><span class="objective-icon objective-icon--awareness" aria-hidden="true"></span></span>
-                  <span class="objective-name">Awareness</span>
-                </label>
-              </li>
-              <li class="objective-item" data-objective="traffic">
-                <input type="radio" name="objective" id="obj-traffic" value="traffic" class="objective-radio">
-                <label for="obj-traffic" class="objective-label">
-                  <span class="objective-icon-wrap"><span class="objective-icon objective-icon--traffic" aria-hidden="true"></span></span>
-                  <span class="objective-name">Traffic</span>
-                </label>
-              </li>
-              <li class="objective-item" data-objective="engagement">
-                <input type="radio" name="objective" id="obj-engagement" value="engagement" class="objective-radio">
-                <label for="obj-engagement" class="objective-label">
-                  <span class="objective-icon-wrap"><span class="objective-icon objective-icon--engagement" aria-hidden="true"></span></span>
-                  <span class="objective-name">Engagement</span>
-                </label>
-              </li>
-              <li class="objective-item" data-objective="leads">
-                <input type="radio" name="objective" id="obj-leads" value="leads" class="objective-radio">
-                <label for="obj-leads" class="objective-label">
-                  <span class="objective-icon-wrap"><span class="objective-icon objective-icon--leads" aria-hidden="true"></span></span>
-                  <span class="objective-name">Leads</span>
-                </label>
-              </li>
-              <li class="objective-item" data-objective="app-promotion">
-                <input type="radio" name="objective" id="obj-app-promotion" value="app-promotion" class="objective-radio">
-                <label for="obj-app-promotion" class="objective-label">
-                  <span class="objective-icon-wrap"><span class="objective-icon objective-icon--app-promotion" aria-hidden="true"></span></span>
-                  <span class="objective-name">App promotion</span>
-                </label>
-              </li>
-              <li class="objective-item" data-objective="sales">
-                <input type="radio" name="objective" id="obj-sales" value="sales" class="objective-radio">
-                <label for="obj-sales" class="objective-label">
-                  <span class="objective-icon-wrap"><span class="objective-icon objective-icon--sales" aria-hidden="true"></span></span>
-                  <span class="objective-name">Sales</span>
-                </label>
-              </li>
+            <ul class="objectives-list" id="objectivesList" role="radiogroup" aria-label="Campaign objectives">
+              <!-- Objectives rendered dynamically from OBJECTIVES data -->
             </ul>
             <aside class="preview-panel" id="previewPanel">
               <div class="preview-illustration-wrap">
-                <div class="preview-illustration" id="previewIllustration"></div>
+                <div class="preview-illustration" id="previewIllustration">
+                  <!-- Preview icon rendered dynamically from OBJECTIVES data -->
+                </div>
               </div>
               <p class="preview-placeholder" id="previewPlaceholder">
                 Your campaign objective is the business goal you hope to achieve by running your ads. Hover over each one for more information.

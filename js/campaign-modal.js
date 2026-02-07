@@ -7,14 +7,17 @@
   "use strict";
 
   // ----- Data: campaign objectives -----
+  // listIconPosition: mask-position Y for modal-list-icons.png (px)
+  // previewIconPosition: background-position Y for modal-right-images.png (px)
   var OBJECTIVES = {
     awareness: {
       id: "awareness",
       title: "Awareness",
       description: "Reach people who are more likely to remember your ads.",
       aboutLink: "About awareness",
-      goodFor: ["Brand awareness", "Reach"],
-      image: "icons/objectives/awareness.png"
+      goodFor: ["Reach", "Brand awareness", "Video views"],
+      listIconPosition: "-399px",
+      previewIconPosition: "-171px"
     },
     traffic: {
       id: "traffic",
@@ -22,7 +25,8 @@
       description: "Send people to a destination, like your website, app, Instagram profile or Facebook event.",
       aboutLink: "About traffic",
       goodFor: ["Link clicks", "Landing page views"],
-      image: "icons/objectives/traffic.png"
+      listIconPosition: "-231px",
+      previewIconPosition: "-342px"
     },
     engagement: {
       id: "engagement",
@@ -30,7 +34,8 @@
       description: "Get more messages, video views, post engagement or leads.",
       aboutLink: "About engagement",
       goodFor: ["Messages", "Video views", "Post engagement", "Lead generation"],
-      image: "icons/objectives/engagement.png"
+      listIconPosition: "-719px",
+      previewIconPosition: "-513px"
     },
     leads: {
       id: "leads",
@@ -38,7 +43,8 @@
       description: "Collect leads for your business or brand.",
       aboutLink: "About leads",
       goodFor: ["Website and instant forms", "Instant forms", "Messenger, Instagram and WhatsApp"],
-      image: "icons/objectives/leads.png"
+      listIconPosition: "-294px",
+      previewIconPosition: "-684px"
     },
     "app-promotion": {
       id: "app-promotion",
@@ -46,7 +52,8 @@
       description: "Find new people to install your app and continue using it.",
       aboutLink: "About app promotion",
       goodFor: ["App installs", "App events"],
-      image: "icons/objectives/app-promotion.png"
+      listIconPosition: "-656px",
+      previewIconPosition: "-855px"
     },
     sales: {
       id: "sales",
@@ -54,9 +61,12 @@
       description: "Find people likely to purchase your product or service.",
       aboutLink: "About sales",
       goodFor: ["Conversions", "Catalog sales", "Messenger, Instagram and WhatsApp"],
-      image: "icons/objectives/sales.png"
+      listIconPosition: "-819px",
+      previewIconPosition: "0px"
     }
   };
+
+  var OBJECTIVE_ORDER = ["awareness", "traffic", "engagement", "leads", "app-promotion", "sales"];
 
   // ----- DOM refs -----
   var overlay = document.getElementById("modalOverlay");
@@ -69,6 +79,7 @@
   var previewPlaceholder = document.getElementById("previewPlaceholder");
   var previewContent = document.getElementById("previewContent");
   var previewIllustration = document.getElementById("previewIllustration");
+  var objectivesListEl = document.getElementById("objectivesList");
   var previewTitle = document.getElementById("previewTitle");
   var previewDescription = document.getElementById("previewDescription");
   var previewLink = document.getElementById("previewLink");
@@ -125,26 +136,53 @@
     previewLinkText.textContent = objective.title.toLowerCase();
     previewLink.setAttribute("href", "#about-" + objective.id);
     previewLink.textContent = "About " + objective.title.toLowerCase();
-    setIllustration(objective.image);
+    setIllustration(objective);
     renderChips(objective.goodFor);
   }
 
-  function setIllustration(src) {
+  function setIllustration(objective) {
     clearIllustration();
-    if (!src) return;
-    var img = document.createElement("img");
-    img.src = src;
-    img.alt = "";
-    img.onerror = function () {
-      this.style.display = "none";
-      previewIllustration.style.background = "#E4E6EB";
-    };
-    previewIllustration.appendChild(img);
+    if (!objective || !previewIllustration) return;
+    var icon = document.createElement("i");
+    icon.className = "preview-icon";
+    icon.setAttribute("aria-hidden", "true");
+    icon.style.backgroundImage = "url(icons/modal-right-images.png)";
+    icon.style.backgroundPosition = "0px " + (objective.previewIconPosition || "0px");
+    icon.style.backgroundSize = "auto";
+    icon.style.backgroundRepeat = "no-repeat";
+    previewIllustration.appendChild(icon);
   }
 
   function clearIllustration() {
-    previewIllustration.innerHTML = "";
-    previewIllustration.style.background = "";
+    if (previewIllustration) {
+      previewIllustration.innerHTML = "";
+      previewIllustration.style.background = "";
+    }
+  }
+
+  function renderObjectivesList() {
+    if (!objectivesListEl) return;
+    objectivesListEl.innerHTML = "";
+    OBJECTIVE_ORDER.forEach(function (id) {
+      var obj = OBJECTIVES[id];
+      if (!obj) return;
+      var li = document.createElement("li");
+      li.className = "objective-item";
+      li.setAttribute("data-objective", obj.id);
+      var radioId = "obj-" + obj.id;
+      li.innerHTML =
+        '<input type="radio" name="objective" id="' + radioId + '" value="' + obj.id + '" class="objective-radio">' +
+        '<label for="' + radioId + '" class="objective-label">' +
+        '<span class="objective-icon-wrap">' +
+        '<i class="objective-list-icon" aria-hidden="true" style="' +
+        '-webkit-mask-image: url(icons/modal-list-icons.png); -webkit-mask-position: 0px ' + obj.listIconPosition + '; -webkit-mask-repeat: no-repeat; ' +
+        'mask-image: url(icons/modal-list-icons.png); mask-position: 0px ' + obj.listIconPosition + '; mask-repeat: no-repeat;' +
+        '"></i>' +
+        '</span>' +
+        '<span class="objective-name">' + obj.title + '</span>' +
+        '</label>';
+      objectivesListEl.appendChild(li);
+    });
   }
 
   function renderChips(labels) {
@@ -336,10 +374,9 @@
 
   // ----- Init -----
   function init() {
+    renderObjectivesList();
     bindEvents();
-    syncListStates();
-    updateContinueButton();
-    renderPreview(null);
+    selectObjective("awareness");
   }
 
   if (document.readyState === "loading") {
