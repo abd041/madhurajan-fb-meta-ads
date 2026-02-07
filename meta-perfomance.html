@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Campaigns – Meta Ads Manager</title>
-<link rel="stylesheet" href="../css/meta-styles.css">
+<link rel="stylesheet" href="css/meta-styles.css">
+  <link rel="stylesheet" href="css/campaign-modal.css">
 </head>
 <body>
   <aside class="sidebar">
@@ -172,20 +173,9 @@
       <div class="sidebar-icon" title="Experiments">
         <div
         class="xtwfq29"
-        style="
-          width: 24px;
-          height: 24px;
-          background-color: currentColor;
-      
-          -webkit-mask-image: url('../icons/edit.png');
-          -webkit-mask-position: -225px -809px;
-          -webkit-mask-repeat: no-repeat;
-      
-          mask-image: url('../icons/edit.png');
-          mask-position: -225px -809px;
-          mask-repeat: no-repeat;
-        "
-      ></div>
+      >
+    <img src="../icons/meta-ai-logo.png" alt="Experiments" style="width: 24px; height: 24px;">
+    </div>
       </div>
       <span class="sidebar-label">Experiments</span>
     </div>
@@ -685,7 +675,7 @@
               <span>Ads for 1 Campaign</span>
             </button>
           </div>
-          <button class="btn-create" type="button">
+          <button class="btn-create" type="button" id="btnCreateCampaign">
             <div class="xtwfq29" style="
             width: 16px;
             height: 16px;
@@ -915,16 +905,26 @@
                 <thead>
                   <tr>
                 <th class="col-delivery">Delivery <span class="sort-icon">⇅</span></th>
-                <th class="col-actions">Actions</th>
-                <th class="col-bid">Bid strategy ▾</th>
-                <th class="col-budget">Budget <span class="sort-icon">⇅</span></th>
-                <th class="col-attribution">Attribution setting ▾</th>
+                <th class="col-actions">Actions <span class="sort-icon">▾</span></th>
+                <th class="col-attribution">Attribution setting</th>
                 <th class="col-results">Results <span class="sort-icon">⇅</span></th>
                 <th class="col-reach">Reach <span class="sort-icon">⇅</span></th>
-                    <th class="col-impressions">Impressions <span class="sort-icon">⇅</span></th>
-                    <th class="col-cost-per-result">Cost per result <span class="sort-icon">⇅</span></th>
-                    <th class="col-amount-spent">Amount spent <span class="sort-icon">⇅</span></th>
-                    <th class="col-ends">Ends <span class="sort-icon">⇅</span></th>
+                <th class="col-frequency">Frequency <span class="sort-icon">⇅</span></th>
+                <th class="col-cost-per-result">Cost per result <span class="sort-icon">⇅</span></th>
+                <th class="col-budget">Budget <span class="sort-icon">⇅</span></th>
+                <th class="col-amount-spent">Amount spent <span class="sort-icon">⇅</span></th>
+                <th class="col-ends">Ends <span class="sort-icon">⇅</span></th>
+                <th class="col-impressions">Impressions <span class="sort-icon">⇅</span></th>
+                <th class="col-cpm">CPM (cost per 1,000...) <span class="sort-icon">⇅</span></th>
+                <th class="col-link-clicks">Link clicks <span class="sort-icon">⇅</span></th>
+                <th class="col-shop-clicks">Shop clicks <span class="sort-icon">⇅</span></th>
+                <th class="col-cpc">CPC (cost per link click) <span class="sort-icon">⇅</span></th>
+                <th class="col-ctr">CTR (link click-throu...) <span class="sort-icon">⇅</span></th>
+                <th class="col-clicks-all">Clicks (all) <span class="sort-icon">⇅</span></th>
+                <th class="col-ctr-all">CTR (all) <span class="sort-icon">⇅</span></th>
+                <th class="col-cpc-all">CPC (all) <span class="sort-icon">⇅</span></th>
+                <th class="col-landing-views">Landing page views <span class="sort-icon">⇅</span></th>
+                <th class="col-cost-landing">Cost per landing pag... <span class="sort-icon">⇅</span></th>
               </tr>
             </thead>
                 <tbody id="campaignTableBodyScrollable">
@@ -932,7 +932,10 @@
           </table>
         </div>
         </div>
-        <div class="table-footer" id="tableFooter">Results from 8 campaigns</div>
+        <div class="table-footer-wrap" id="tableFooterWrap">
+          <div class="table-footer" id="tableFooter">Results from 9 campaigns</div>
+          <div class="table-footer-sums" id="tableFooterSums"></div>
+        </div>
       </div>
     </div>
   </main>
@@ -960,6 +963,131 @@
     </button>
   </aside>
 
-<script src="../js/meta.js"></script>
+  <!-- Campaign objective modal -->
+  <div class="modal-overlay" id="modalOverlay" aria-hidden="true">
+    <div class="modal" id="campaignModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <header class="modal-header">
+        <div class="modal-tabs">
+          <button type="button" class="modal-tab modal-tab--active" aria-selected="true">Create new campaign</button>
+          <button type="button" class="modal-tab" aria-selected="false">New ad set or ad</button>
+        </div>
+        <button type="button" class="modal-close" id="modalClose" aria-label="Close modal">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M4 4l12 12M4 16L16 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </header>
+      <div class="modal-body">
+        <section class="buying-type-section">
+          <span class="buying-type-label">
+            Choose a buying type
+            <span class="info-icon" title="Learn more about buying types" aria-hidden="true">i</span>
+          </span>
+          <div class="buying-type-dropdown" id="buyingTypeDropdown">
+            <button type="button" class="buying-type-trigger" id="buyingTypeTrigger" aria-expanded="false" aria-haspopup="listbox" aria-label="Buying type">
+              <span class="buying-type-trigger-text" id="buyingTypeTriggerText">Auction</span>
+              <span class="buying-type-arrow" aria-hidden="true">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <path d="M2.5 4.5L6 8l3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </button>
+            <div class="buying-type-panel" id="buyingTypePanel" role="listbox" aria-hidden="true">
+              <div class="buying-type-option buying-type-option--selected" data-value="auction" role="option" aria-selected="true" tabindex="0">
+                <span class="buying-type-option-radio"></span>
+                <div class="buying-type-option-content">
+                  <span class="buying-type-option-title">Auction</span>
+                  <span class="buying-type-option-subtitle">Buy in real-time with cost effective bidding.</span>
+                </div>
+              </div>
+              <div class="buying-type-option" data-value="reservation" role="option" aria-selected="false" tabindex="0">
+                <span class="buying-type-option-radio"></span>
+                <div class="buying-type-option-content">
+                  <span class="buying-type-option-title">Reservation</span>
+                  <span class="buying-type-option-subtitle">Buy in advance for more predictable outcomes.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="objectives-section">
+          <h2 class="objectives-heading" id="modalTitle">Choose a campaign objective</h2>
+          <div class="objectives-layout">
+            <ul class="objectives-list" role="radiogroup" aria-label="Campaign objectives">
+              <li class="objective-item" data-objective="awareness">
+                <input type="radio" name="objective" id="obj-awareness" value="awareness" class="objective-radio">
+                <label for="obj-awareness" class="objective-label">
+                  <span class="objective-icon-wrap"><span class="objective-icon objective-icon--awareness" aria-hidden="true"></span></span>
+                  <span class="objective-name">Awareness</span>
+                </label>
+              </li>
+              <li class="objective-item" data-objective="traffic">
+                <input type="radio" name="objective" id="obj-traffic" value="traffic" class="objective-radio">
+                <label for="obj-traffic" class="objective-label">
+                  <span class="objective-icon-wrap"><span class="objective-icon objective-icon--traffic" aria-hidden="true"></span></span>
+                  <span class="objective-name">Traffic</span>
+                </label>
+              </li>
+              <li class="objective-item" data-objective="engagement">
+                <input type="radio" name="objective" id="obj-engagement" value="engagement" class="objective-radio">
+                <label for="obj-engagement" class="objective-label">
+                  <span class="objective-icon-wrap"><span class="objective-icon objective-icon--engagement" aria-hidden="true"></span></span>
+                  <span class="objective-name">Engagement</span>
+                </label>
+              </li>
+              <li class="objective-item" data-objective="leads">
+                <input type="radio" name="objective" id="obj-leads" value="leads" class="objective-radio">
+                <label for="obj-leads" class="objective-label">
+                  <span class="objective-icon-wrap"><span class="objective-icon objective-icon--leads" aria-hidden="true"></span></span>
+                  <span class="objective-name">Leads</span>
+                </label>
+              </li>
+              <li class="objective-item" data-objective="app-promotion">
+                <input type="radio" name="objective" id="obj-app-promotion" value="app-promotion" class="objective-radio">
+                <label for="obj-app-promotion" class="objective-label">
+                  <span class="objective-icon-wrap"><span class="objective-icon objective-icon--app-promotion" aria-hidden="true"></span></span>
+                  <span class="objective-name">App promotion</span>
+                </label>
+              </li>
+              <li class="objective-item" data-objective="sales">
+                <input type="radio" name="objective" id="obj-sales" value="sales" class="objective-radio">
+                <label for="obj-sales" class="objective-label">
+                  <span class="objective-icon-wrap"><span class="objective-icon objective-icon--sales" aria-hidden="true"></span></span>
+                  <span class="objective-name">Sales</span>
+                </label>
+              </li>
+            </ul>
+            <aside class="preview-panel" id="previewPanel">
+              <div class="preview-illustration-wrap">
+                <div class="preview-illustration" id="previewIllustration"></div>
+              </div>
+              <p class="preview-placeholder" id="previewPlaceholder">
+                Your campaign objective is the business goal you hope to achieve by running your ads. Hover over each one for more information.
+              </p>
+              <div class="preview-content" id="previewContent" hidden>
+                <h3 class="preview-title" id="previewTitle"></h3>
+                <p class="preview-description" id="previewDescription"></p>
+                <a href="#" class="preview-link" id="previewLink">About <span id="previewLinkText"></span></a>
+                <div class="preview-good-for" id="previewGoodFor">
+                  <span class="preview-good-for-label">Good for:</span>
+                  <div class="preview-chips" id="previewChips"></div>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </section>
+      </div>
+      <footer class="modal-footer">
+        <a href="#" class="footer-link">About campaign objectives</a>
+        <div class="modal-actions">
+          <button type="button" class="btn btn--secondary" id="btnCancel">Cancel</button>
+          <button type="button" class="btn btn--primary btn--disabled" id="btnContinue" disabled>Continue</button>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <script src="js/meta-performance.js"></script>
+  <script src="js/campaign-modal.js"></script>
 </body>
 </html>
