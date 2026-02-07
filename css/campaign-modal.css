@@ -340,6 +340,7 @@ font-family: var(--font-stack);
   grid-template-columns: 1fr 1fr;
   gap: 24px;
   align-items: start;
+  pointer-events: auto;
 }
 
 @media (max-width: 768px) {
@@ -622,17 +623,17 @@ font-family: var(--font-stack);
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 16px;
-  padding: 16px 24px;
+  padding: 12px 24px;
   border-top: var(--border-subtle);
   flex-shrink: 0;
   background: #fff;
 }
 
 .footer-link {
-  font-family: var(--font-stack);
-  font-size: 15px;
-  color: var(--color-primary);
-  text-decoration: none;
+    font-family: var(--font-stack);
+    font-size: 14px;
+    color: #0a78be;
+    text-decoration: none;
 }
 
 .footer-link:hover {
@@ -648,9 +649,9 @@ font-family: var(--font-stack);
 /* ----- Buttons ----- */
 .btn {
   font-family: var(--font-stack);
-  font-size: 15px;
-  font-weight: 600;
-  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 16px;
   border-radius: 6px;
   cursor: pointer;
   transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
@@ -669,7 +670,7 @@ font-family: var(--font-stack);
 
 .btn--primary {
   color: #fff;
-  background: var(--color-primary);
+  background: #0a78be;
   border: none;
 }
 

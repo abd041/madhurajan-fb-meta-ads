@@ -80,6 +80,7 @@
   var previewContent = document.getElementById("previewContent");
   var previewIllustration = document.getElementById("previewIllustration");
   var objectivesListEl = document.getElementById("objectivesList");
+  var objectivesLayout = document.getElementById("objectivesLayout");
   var previewTitle = document.getElementById("previewTitle");
   var previewDescription = document.getElementById("previewDescription");
   var previewLink = document.getElementById("previewLink");
@@ -219,6 +220,7 @@
     overlay.setAttribute("aria-hidden", "false");
     if (modal) modal.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
+    bindObjectiveHover();
   }
 
   function closeModal() {
@@ -226,6 +228,7 @@
     overlay.setAttribute("aria-hidden", "true");
     if (modal) modal.setAttribute("aria-hidden", "true");
     document.body.style.overflow = "";
+    unbindObjectiveHover();
   }
 
   function selectObjective(id) {
@@ -318,15 +321,39 @@
     closeBuyingTypeDropdown();
   }
 
-  // ----- Event: objective hover -----
-  function onObjectiveMouseEnter(e) {
-    var item = e.currentTarget;
-    var id = getObjectiveIdFromItem(item);
-    setHovered(id);
+  // ----- Event: objective hover (delegated for reliable hover) -----
+  function findObjectiveItem(el) {
+    while (el && el !== document.body) {
+      if (el.classList && el.classList.contains("objective-item")) return el;
+      el = el.parentNode;
+    }
+    return null;
   }
 
-  function onObjectiveMouseLeave(e) {
+  function onObjectivesLayoutMouseOver(e) {
+    var item = findObjectiveItem(e.target);
+    if (item) {
+      var id = getObjectiveIdFromItem(item);
+      setHovered(id);
+    }
+  }
+
+  function onObjectivesLayoutMouseLeave(e) {
     setHovered(null);
+  }
+
+  function bindObjectiveHover() {
+    if (objectivesLayout) {
+      objectivesLayout.addEventListener("mouseover", onObjectivesLayoutMouseOver);
+      objectivesLayout.addEventListener("mouseleave", onObjectivesLayoutMouseLeave);
+    }
+  }
+
+  function unbindObjectiveHover() {
+    if (objectivesLayout) {
+      objectivesLayout.removeEventListener("mouseover", onObjectivesLayoutMouseOver);
+      objectivesLayout.removeEventListener("mouseleave", onObjectivesLayoutMouseLeave);
+    }
   }
 
   // ----- Event: objective select (click) -----
@@ -359,12 +386,11 @@
     }
     document.addEventListener("click", onDocumentClick);
 
-    var items = document.querySelectorAll(".objective-item");
-    items.forEach(function (item) {
-      item.addEventListener("mouseenter", onObjectiveMouseEnter);
-      item.addEventListener("mouseleave", onObjectiveMouseLeave);
-      item.addEventListener("click", onObjectiveClick);
-    });
+    if (objectivesListEl) {
+      objectivesListEl.querySelectorAll(".objective-item").forEach(function (item) {
+        item.addEventListener("click", onObjectiveClick);
+      });
+    }
 
     var radios = document.querySelectorAll(".objective-radio");
     radios.forEach(function (radio) {
@@ -377,6 +403,9 @@
     renderObjectivesList();
     bindEvents();
     selectObjective("awareness");
+    if (overlay && overlay.classList.contains("is-open")) {
+      bindObjectiveHover();
+    }
   }
 
   if (document.readyState === "loading") {
