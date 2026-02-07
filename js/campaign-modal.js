@@ -26,7 +26,7 @@
       aboutLink: "About traffic",
       goodFor: ["Link clicks", "Landing page views"],
       listIconPosition: "-231px",
-      previewIconPosition: "-342px"
+      previewIconPosition: "-855px"
     },
     engagement: {
       id: "engagement",
@@ -34,8 +34,8 @@
       description: "Get more messages, video views, post engagement or leads.",
       aboutLink: "About engagement",
       goodFor: ["Messages", "Video views", "Post engagement", "Lead generation"],
-      listIconPosition: "-719px",
-      previewIconPosition: "-513px"
+      listIconPosition: "-420px",
+      previewIconPosition: "-1026px"
     },
     leads: {
       id: "leads",
@@ -44,7 +44,7 @@
       aboutLink: "About leads",
       goodFor: ["Website and instant forms", "Instant forms", "Messenger, Instagram and WhatsApp"],
       listIconPosition: "-294px",
-      previewIconPosition: "-684px"
+      previewIconPosition: "-513px"
     },
     "app-promotion": {
       id: "app-promotion",
@@ -52,8 +52,8 @@
       description: "Find new people to install your app and continue using it.",
       aboutLink: "About app promotion",
       goodFor: ["App installs", "App events"],
-      listIconPosition: "-656px",
-      previewIconPosition: "-855px"
+      listIconPosition: "-589px",
+      previewIconPosition: "0"
     },
     sales: {
       id: "sales",
@@ -62,7 +62,7 @@
       aboutLink: "About sales",
       goodFor: ["Conversions", "Catalog sales", "Messenger, Instagram and WhatsApp"],
       listIconPosition: "-819px",
-      previewIconPosition: "0px"
+      previewIconPosition: "-684px"
     }
   };
 
@@ -189,7 +189,7 @@
     previewChips.innerHTML = "";
     if (!labels || !labels.length) return;
     labels.forEach(function (label) {
-      var chip = document.createElement("span");
+      var chip = document.createElement("div");
       chip.className = "preview-chip";
       chip.textContent = label;
       previewChips.appendChild(chip);
